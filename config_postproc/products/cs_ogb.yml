@@ -1,0 +1,9 @@
+method: cs
+check_record: True
+hyperparameter:
+  alpha: 0.8    # This follows the ogbn-products setting of the official C&S repo. 
+  norm_sym: False
+dir_pred_mat:   # replace the following with actual log dirs
+  - logs/products/finished/2021-01-01 00-00-00-<githash>
+  - logs/products/finished/2021-01-01 00-00-01-<githash>
+  # - ... can add more dirs

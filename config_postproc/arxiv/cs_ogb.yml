@@ -1,0 +1,8 @@
+method: cs
+hyperparameter:
+  alpha: 0.7
+  norm_sym: True
+dir_pred_mat:   # replace the following with actual log dirs
+  - logs/arxiv/finished/2021-01-01 00-00-00-<githash>
+  - logs/arxiv/finished/2021-01-01 00-00-01-<githash>
+  # - ... can add more dirs

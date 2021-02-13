@@ -16,7 +16,7 @@ architecture:
   residue: max
   pooling: max
 hyperparameter:
-  end: 30
+  end: 20
   lr: 0.0002
   dropout: 0.3
   dropedge: 0.1

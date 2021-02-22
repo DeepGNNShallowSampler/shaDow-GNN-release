@@ -133,7 +133,14 @@ class MinibatchShallowSampler:
         self.nocache_modes = nocache_modes
         self.graph_sampler = {TRAIN: None, VALID: None, TEST: None}
         sampler_config_ensemble = deepcopy(sampler_config_ensemble)
-        self.num_ensemble = len(sampler_config_ensemble['configs'])
+        self.num_ensemble = 0
+        for sc in sampler_config_ensemble['configs']:
+            num_ens_cur = [len(v) for k, v in sc.items() if k != 'method']
+            if len(num_ens_cur) == 0:
+                self.num_ensemble += 1
+            else:
+                assert max(num_ens_cur) == min(num_ens_cur)
+                self.num_ensemble += num_ens_cur[0]
         if "full" in [c['method'] for c in sampler_config_ensemble['configs']]:
             # treat FULL sampler as no sampling. Also no ensemble under FULL sampler
             assert self.num_ensemble == 1
@@ -270,7 +277,7 @@ class MinibatchShallowSampler:
                 for subg in subg_l_raw:
                     assert subg.target.size == 1
                     id_root = subg.node[subg.target][0]
-                    self.cache_subg[mode].set(i, id_root, subg)            # TODO TODO may not need to copy at all
+                    self.cache_subg[mode].set(i, id_root, subg)
                 subg_ens_l = subg_l_raw
             elif self.record_subgraphs[mode][i] == "reuse":
                 subg_ens_l = []

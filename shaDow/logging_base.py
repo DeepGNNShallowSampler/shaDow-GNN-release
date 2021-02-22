@@ -358,10 +358,10 @@ class LoggerBase:
             acc_ret['loss']  = _info_epoch.loss[-1]
             epstr = f"Ep {_info_epoch.idx_epoch:4d}" if mode == TRAIN else " " * 7
             msg_print = [(f"{epstr} [{MODE2STR[mode].upper():>6s}]\t", None),
-                         (f"loss = {_info_epoch.loss[-1]:.4f}\t", self.style_metric['loss'])]
+                         (f"loss = {_info_epoch.loss[-1]:.5f}\t", self.style_metric['loss'])]
             for n in _info_epoch.names_acc_fields:
                 acc_ret[n] = getattr(_info_epoch, n)[-1]
-                msg_print.append((f"{n} = {acc_ret[n]:.4f}\t", self.style_metric['acc']))
+                msg_print.append((f"{n} = {acc_ret[n]:.5f}\t", self.style_metric['acc']))
             msg_file_header = f'{_info_epoch.idx_epoch:4d}, '
             msg_file_ending = '\n'
         elif status == 'final':
@@ -372,7 +372,7 @@ class LoggerBase:
                            f"(Epoch {self.info_epoch[VALID].epoch_best:4d}): \n\t"), None)]
             for n in _info_epoch.names_acc_fields:
                 acc_ret[n] = getattr(_info_epoch, n)[-1]
-                msg_print.append((f"{n.upper()} = {acc_ret[n]:.4f}\t", self.style_metric['acc']))
+                msg_print.append((f"{n.upper()} = {acc_ret[n]:.5f}\t", self.style_metric['acc']))
             msg_file_header = ''
             msg_file_ending = ', ' if mode != TEST else '\n'
         else:
@@ -381,8 +381,8 @@ class LoggerBase:
             msg_print.append((f"time = {time:.2f} s", None))
         self.printf(msg_print, style=[self.style_mode[mode], self.style_status[status]])
         msg_file = msg_file_header \
-                 + f"{_info_epoch.loss[-1]:.4f}, " \
-                 + ', '.join(f"{getattr(_info_epoch, n)[-1]:.4f}" for n in _info_epoch.names_acc_fields)\
+                 + f"{_info_epoch.loss[-1]:.5f}, " \
+                 + ', '.join(f"{getattr(_info_epoch, n)[-1]:.5f}" for n in _info_epoch.names_acc_fields)\
                  + msg_file_ending
         if not self.no_log:
             self.log2file(mode, "values", msg=msg_file, status=status)
@@ -481,22 +481,22 @@ class LoggerBase:
         self.printf(f"------------------------------------------------------------------------------", style=None)
         for dl in data_line:
             self.printf([
-                (f"{dl[0]:^10.4f} -> {dl[1]:^10.4f}    ", self.style_mode[TRAIN]),
-                (f"{dl[2]:^10.4f} -> {dl[3]:^10.4f}    ", self.style_mode[VALID]),
-                (f"{dl[4]:^9.4f} -> {dl[5]:^9.4f}", self.style_mode[TEST])])
+                (f"{dl[0]:^10.5f} -> {dl[1]:^10.5f}    ", self.style_mode[TRAIN]),
+                (f"{dl[2]:^10.5f} -> {dl[3]:^10.5f}    ", self.style_mode[VALID]),
+                (f"{dl[4]:^9.5f} -> {dl[5]:^9.5f}", self.style_mode[TEST])])
         self.printf(f"==============================================================================", style=None)
         acc_orig_copy, acc_post_copy = {}, {}
         for md in [TRAIN, VALID, TEST]:
             acc_orig_copy[md] = np.asarray(acc_orig[md])
             acc_post_copy[md] = np.asarray(acc_post[md])
         self.printf([
-            (f"{acc_orig_copy[TRAIN].mean():^10.4f} -> {acc_post_copy[TRAIN].mean():^10.4f}    ", self.style_mode[TRAIN]),
-            (f"{acc_orig_copy[VALID].mean():^10.4f} -> {acc_post_copy[VALID].mean():^10.4f}    ", self.style_mode[VALID]),
-            (f"{acc_orig_copy[TEST].mean():^9.4f} -> {acc_post_copy[TEST].mean():^9.4f}", self.style_mode[TEST])
+            (f"{acc_orig_copy[TRAIN].mean():^10.5f} -> {acc_post_copy[TRAIN].mean():^10.5f}    ", self.style_mode[TRAIN]),
+            (f"{acc_orig_copy[VALID].mean():^10.5f} -> {acc_post_copy[VALID].mean():^10.5f}    ", self.style_mode[VALID]),
+            (f"{acc_orig_copy[TEST].mean():^9.5f} -> {acc_post_copy[TEST].mean():^9.5f}", self.style_mode[TEST])
         ], style='bold')
         self.printf([
-            (f"{acc_orig_copy[TRAIN].std():^10.4f} -> {acc_post_copy[TRAIN].std():^10.4f}    ", self.style_mode[TRAIN]),
-            (f"{acc_orig_copy[VALID].std():^10.4f} -> {acc_post_copy[VALID].std():^10.4f}    ", self.style_mode[VALID]),
-            (f"{acc_orig_copy[TEST].std():^9.4f} -> {acc_post_copy[TEST].std():^9.4f}", self.style_mode[TEST])
+            (f"{acc_orig_copy[TRAIN].std():^10.5f} -> {acc_post_copy[TRAIN].std():^10.5f}    ", self.style_mode[TRAIN]),
+            (f"{acc_orig_copy[VALID].std():^10.5f} -> {acc_post_copy[VALID].std():^10.5f}    ", self.style_mode[VALID]),
+            (f"{acc_orig_copy[TEST].std():^9.5f} -> {acc_post_copy[TEST].std():^9.5f}", self.style_mode[TEST])
         ], style=None)
         self.printf(f"==============================================================================", style='bold')
